@@ -15,6 +15,7 @@ static void execute(const std::vector<std::string>& args) {
     for (const std::string& arg : args) {
         args_ptrs.push_back(const_cast<char*>(arg.data()));
     }
+    args_ptrs.push_back(nullptr);
 
     char** argv = args_ptrs.data();
 
@@ -29,7 +30,7 @@ static void execute(const std::vector<std::string>& args) {
             exit(EXIT_SUCCESS);
         default:
             int exit_code;
-            if (waitpid(pid, &exit_code, 0) == EXIT_FAILURE) {
+            if (waitpid(pid, &exit_code, 0) == -1) {
                 std::cerr << "Execution failed: " << strerror(errno) << std::endl;
             } else {
                 std::cout << "Executed. Return code: " << WEXITSTATUS(exit_code) << std::endl;
